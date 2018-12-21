@@ -8,6 +8,7 @@
 using namespace std;
 using namespace Eigen;
 using namespace arma;
+using namespace boost;
 
 //boost::random::mt19937 gen(0);
 boost::random::mt19937 gen(time(0));
@@ -104,7 +105,8 @@ double sample_hyper(const MatrixXd& w1_M1_sample, const MatrixXd& WI_m, double b
 	//Wishard draw, using the armadillo function. So I cast to an armadillo matrix, draw wishart then cast back to eigen matrix.
 	//should just code the wishart function.
 	mat arma_lambda =cast_arma(WI_post);
-	lambda_m=cast_eigen(wishrnd(arma_lambda, df_mpost));
+	mat W = wishrnd(arma_lambda, df_mpost);
+	lambda_m=cast_eigen(W);
 
 	//multivariate normal mean
 	VectorXd mu_temp(num_feat);

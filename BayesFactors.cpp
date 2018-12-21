@@ -92,6 +92,7 @@ int main(int argc, char *argv[])
 	}
 //Read missing data indicator matrix
 	MatrixXd Indicator(N,M);
+
 	if (vm.count("missing")) {
 	ifstream f2(input+".Indicator");
 	if (f2){
@@ -273,15 +274,17 @@ int main(int argc, char *argv[])
 		sample_residual_row_variance_gamma(epsilon_t, sigma2_e_rowvec);
 
 		//update SNP hyperparameters
-		//sample_hyper(w1_M1_sample,WI_m,b0_m,mu0_m,df_m,mu_m,lambda_m);
+		sample_hyper(w1_M1_sample,WI_m,b0_m,mu0_m,df_m,mu_m,lambda_m);
 		//update individual hyperparameters
 		sample_hyper(w1_P1_sample,WI_u,b0_u,mu0_u,df_u,mu_u,lambda_u);
 		//update individual parameters
-		//sample_ind (Xglobalmean,w1_M1_sample,w1_P1_sample,X,N,num_feat,lambda_u,mu_u,sigma2_e_rowvec);
-		sample_ind_missing (Xglobalmean,w1_M1_sample,w1_P1_sample,Indicator,X,N,M,num_feat,lambda_u,mu_u,sigma2_e_rowvec);
-		sample_SNP_missing (Xglobalmean,w1_P1_sample,w1_M1_sample,Indicator,X,N,M,num_feat,lambda_m,mu_m,sigma2_e);
+
+		//sample_ind_missing (Xglobalmean,w1_M1_sample,w1_P1_sample,Indicator,X,N,M,num_feat,lambda_u,mu_u,sigma2_e_rowvec);
+		//sample_SNP_missing (Xglobalmean,w1_P1_sample,w1_M1_sample,Indicator,X,N,M,num_feat,lambda_m,mu_m,sigma2_e);
+
 		//update SNP parameters
-		//sample_SNP (Xglobalmean,w1_P1_sample,w1_M1_sample,X,M,num_feat,lambda_m,mu_m,sigma2_e);
+		sample_ind (Xglobalmean,w1_M1_sample,w1_P1_sample,X,N,num_feat,lambda_u,mu_u,sigma2_e_rowvec);
+		sample_SNP (Xglobalmean,w1_P1_sample,w1_M1_sample,X,M,num_feat,lambda_m,mu_m,sigma2_e);
 		//update rows and columns together
 		//sample_ind_SNP (w1_M1_sample,w1_P1_sample, X,N,M,num_feat,lambda_u,mu_u,lambda_m,mu_m,sigma2_e);
 
@@ -344,16 +347,16 @@ int main(int argc, char *argv[])
 		sample_residual_row_variance_gamma(epsilon_t, sigma2_e_rowvec);
 
 		//update SNP hyperparameters
-		//sample_hyper(w1_M1_sample,WI_m,b0_m,mu0_m,df_m,mu_m,lambda_m);
+		sample_hyper(w1_M1_sample,WI_m,b0_m,mu0_m,df_m,mu_m,lambda_m);
 		//update individual hyperparameters
 		sample_hyper(w1_P1_sample,WI_u,b0_u,mu0_u,df_u,mu_u,lambda_u);
 
 		//update individual parameters
-		//sample_ind (Xglobalmean,w1_M1_sample,w1_P1_sample,X,N,num_feat,lambda_u,mu_u,sigma2_e_rowvec);
-		sample_ind_missing (Xglobalmean,w1_M1_sample,w1_P1_sample,Indicator,X,N,M,num_feat,lambda_u,mu_u,sigma2_e_rowvec);
-		sample_SNP_missing (Xglobalmean,w1_P1_sample,w1_M1_sample,Indicator,X,N,M,num_feat,lambda_m,mu_m,sigma2_e);
+		sample_ind (Xglobalmean,w1_M1_sample,w1_P1_sample,X,N,num_feat,lambda_u,mu_u,sigma2_e_rowvec);
+		//sample_ind_missing (Xglobalmean,w1_M1_sample,w1_P1_sample,Indicator,X,N,M,num_feat,lambda_u,mu_u,sigma2_e_rowvec);
+		//sample_SNP_missing (Xglobalmean,w1_P1_sample,w1_M1_sample,Indicator,X,N,M,num_feat,lambda_m,mu_m,sigma2_e);
 		//update SNP parameters
-		//sample_SNP (Xglobalmean,w1_P1_sample,w1_M1_sample,X,M,num_feat,lambda_m,mu_m,sigma2_e);
+		sample_SNP (Xglobalmean,w1_P1_sample,w1_M1_sample,X,M,num_feat,lambda_m,mu_m,sigma2_e);
 
 		//running average has +1 value (1 from burnin)
 		Ew1_M1_sample=Ew1_M1_sample+(w1_M1_sample-Ew1_M1_sample)/(i+2);
